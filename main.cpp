@@ -94,7 +94,7 @@ int main() {
         cout<<"Option Price (GPU): " << temp_sum << "\n";
         cout<<"Option Price (CPU): " << sum << "\n";
         cout<<"******************* TIME *****************\n";
-        cout<<"GPU Monte Carlo Computation: " << (t3-t2)*1e3 << " ms\n";
+        cout<<"GPU Monte Carlo Computation: " << (t4-t2)*1e3 << " ms\n";
         cout<<"CPU Monte Carlo Computation: " << (t5-t4)*1e3 << " ms\n";
         cout<<"******************* END *****************\n";
 
