@@ -65,6 +65,4 @@ Each node runs a version of Multiple CPUs, Multiple GPUs running on multiple Cud
 
 ## References
 
-<ol>
-<li> "Monte Carlo Simulations In CUDA - Barrier Option Pricing",  QuantStart, <a url=[this](https://www.quantstart.com/articles/Monte-Carlo-Simulations-In-CUDA-Barrier-Option-Pricing/)> Link </a>
-</li></ol>
+1. "Monte Carlo Simulations In CUDA - Barrier Option Pricing",  QuantStart, [this](https://www.quantstart.com/articles/Monte-Carlo-Simulations-In-CUDA-Barrier-Option-Pricing/) <br>
