@@ -1,3 +1,9 @@
+module purge
+module load usc/8.3.0
+module load cuda
+
 nvcc -c kernel.o kernel.cu
 nvcc -c main.cpp
 nvcc -o output main.o kernel.o -lcurand
+
+nvcc -Xcompiler -fopenmp main_omp.o kernel.o -o main_omp -I${OPENMPI_ROOT}/include -L${OPENMPI_ROOT}/lib -lmpi -lgomp -lcurand
