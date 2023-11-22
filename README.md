@@ -13,7 +13,7 @@ foo@bar:~$ sbatch main.sl
 foo@bar:~$ make main_omp
 foo@bar:~$ sbatch main_omp.sl
 ```
-###  Muliple Node, Multiple CPUs, Multiple GPUs
+#### Muliple Node, Multiple CPUs, Multiple GPUs running on multiple Cuda threads and multiple CPU threads
 (Not finished yet)
 ## Brief background
 
@@ -57,7 +57,7 @@ We have 3 versions of the code:
 <li> <p>Single CPU, Single GPU running on multiple Cuda threads and a single CPU thread
 <li><p> Multiple CPU, Multiple GPU running on multiple Cuda threads and multiple CPU threads
 <br> Each CPU runs a sinsgle CPU thread. Here we make sure to allocate a GPU to every CPU and reduction of the result from multiple CUDA threads running on Single GPU is performed on a Single CPU thread.  
-<li> <p> Muliple Node, Multiple CPUs, Multiple GPUs<br>
+<li> <p> Muliple Node, Multiple CPUs, Multiple GPUs running on multiple Cuda threads and multiple CPU threads<br>
 Each node runs a version of Multiple CPU, Multiple GPU running on multiple Cuda threads and multiple CPU threads
 
 
