@@ -40,7 +40,7 @@ Each node also has accelerated GPU units associated with it where each unit can 
 
 ### How the code works:
 
-We use the formula given in [this](https://www.quantstart.com/articles/Monte-Carlo-Simulations-In-CUDA-Barrier-Option-Pricing/) article by QuantStart to simulate the underlying price and the discretized Euler method version comes down to this:
+We use the Geometric Brownian Motion to simulate the underlying price, and the discretized Euler method version comes down to this:
 
 $$ S_t = S_{t-1}\ +\  \mu S_{t-1} \Delta t\+ \ \sigma  S_{n-1}\Delta W_t  $$
 
@@ -48,7 +48,7 @@ $S_t$: The price of the underlying at time t <br>
 $\mu$ : The expected return <br>
 $\sigma$ : The expected volatility<br>
 $\Delta t$: The time difference between each iteration <br>
-$\Delta W_t$: Random number drawn from a distribution with mean 0 and variance $ \Delta t $ (Brownian motion component) <br>
+$\Delta W_t$: Random number drawn from a distribution with mean 0 and variance $\Delta t$ (Brownian motion component) <br>
 <br>
 
 The code generates an array of random elements $\Delta W_t$ and simulates the price motion according to it. 
@@ -65,4 +65,4 @@ Each node runs a version of Multiple CPUs, Multiple GPUs running on multiple Cud
 
 ## References
 
-1. "Monte Carlo Simulations In CUDA - Barrier Option Pricing",  QuantStart, [this](https://www.quantstart.com/articles/Monte-Carlo-Simulations-In-CUDA-Barrier-Option-Pricing/) <br>
+1. "Monte Carlo Simulations In CUDA - Barrier Option Pricing",  QuantStart, [Link](https://www.quantstart.com/articles/Monte-Carlo-Simulations-In-CUDA-Barrier-Option-Pricing/) <br>
