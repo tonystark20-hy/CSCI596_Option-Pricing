@@ -39,7 +39,7 @@ int main()
         // generate random numbers
         curandGenerator_t curandGenerator;
         curandCreateGenerator(&curandGenerator, CURAND_RNG_PSEUDO_MTGP32);
-        curandSetPseudoRandomGeneratorSeed(curandGenerator, 1234ULL);
+        curandSetPseudoRandomGeneratorSeed(curandGenerator, 0);
         curandGenerateNormal(curandGenerator, d_normals.getData(), N_NORMALS, 0.0f, sqrdt);
         double t2 = double(clock()) / CLOCKS_PER_SEC;
 

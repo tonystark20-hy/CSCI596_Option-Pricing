@@ -6,4 +6,5 @@
 #SBATCH --time=00:00:59
 #SBATCH --output=main_omp.out
 #SBATCH -A anakano_429
+export OMP_NUM_THREADS=2
 ./main_omp

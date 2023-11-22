@@ -31,8 +31,9 @@ int main()
         float dt = float(T) / float(N_STEPS);
         float sqrdt = sqrt(dt);
         int thread_count;
-        int sum;
-        omp_set_num_threads(N_THREADS);
+        double sum;
+        cout<<"Total number of CPUs: "<<omp_get_num_procs()<<"\n";
+        cout<<"max threads available: "<<omp_get_max_threads()<<" "<<N_THREADS<<"\n";
 
         double t2 = double(clock()) / CLOCKS_PER_SEC;
 // generate arrays
@@ -42,31 +43,32 @@ int main()
             {
                 thread_count = omp_get_num_threads();
             }
-
+            int thread_paths = N_PATHS/thread_count;
+            int thread_normals = N_NORMALS/thread_count;
             cudaSetDevice(omp_get_thread_num());
-            vector<float> s(N_PATHS);
-            dev_array<float> d_s(N_PATHS);
-            dev_array<float> d_normals(N_NORMALS/thread_count);
+            vector<float> s(thread_paths);
+            dev_array<float> d_s(thread_paths);
+            dev_array<float> d_normals(thread_normals);
 
             curandGenerator_t curandGenerator;
             curandCreateGenerator(&curandGenerator, CURAND_RNG_PSEUDO_MTGP32);
-            curandSetPseudoRandomGeneratorSeed(curandGenerator, omp_get_thread_num());
-            curandGenerateNormal(curandGenerator, d_normals.getData(), N_NORMALS, 0.0f, sqrdt);
+            curandSetPseudoRandomGeneratorSeed(curandGenerator, 0);
+            curandGenerateNormal(curandGenerator, d_normals.getData(), thread_normals, 0.0f, sqrdt);
 
             // call the kernel
-            mc_dao_call(d_s.getData(), T, K, B, S0, sigma, mu, r, dt, d_normals.getData(), N_STEPS, N_PATHS);
+            mc_dao_call(d_s.getData(), T, K, B, S0, sigma, mu, r, dt, d_normals.getData(), N_STEPS, thread_paths);
             cudaDeviceSynchronize();
 
             // copy results from device to host
-            d_s.get(&s[0], N_PATHS);
+            d_s.get(&s[0], thread_paths);
 
             // compute the payoff average
             sum = 0.0;
-            for (size_t i = 0; i < N_PATHS; i++)
+            for (size_t i = 0; i < thread_paths; i++)
             {
                 sum += s[i];
             }
-            sum /= N_PATHS;
+            sum /= thread_paths;
             curandDestroyGenerator(curandGenerator);
         }
 
@@ -75,6 +77,7 @@ int main()
         // init variables for CPU Monte Carlo
 
         cout << "****************** INFO ******************\n";
+        cout << "Number of Threads and devices: " << thread_count <<" "<< N_THREADS <<"\n";
         cout << "Number of Paths: " << N_PATHS << "\n";
         cout << "Underlying Initial Price: " << S0 << "\n";
         cout << "Strike: " << K << "\n";
