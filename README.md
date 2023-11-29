@@ -57,7 +57,7 @@ We have four versions of the code:
 <li> <p>Simple single, threaded version
 <li> <p>Single CPU, Single GPU running on multiple Cuda threads and a single CPU thread
 <li><p> Multiple CPU, Multiple GPU running on multiple Cuda threads and multiple CPU threads
-<br> Each CPU runs a sinsgle CPU thread. Here, we allocate a GPU to every CPU and reduce the result from multiple CUDA threads running on a Single GPU performed on a Single CPU thread.  
+<br> Each CPU runs a single CPU thread. Here, we allocate a GPU to every CPU and reduce the result from multiple CUDA threads running on a Single GPU performed on a Single CPU thread.  
 <li> <p> Multiple Node, Multiple CPUs, Multiple GPUs running on multiple Cuda threads and multiple CPU threads<br>
 Each node runs a version of Multiple CPUs, Multiple GPUs running on multiple Cuda threads, and multiple CPU threads
 </ol>
