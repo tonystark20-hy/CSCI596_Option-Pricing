@@ -22,6 +22,10 @@ This project simulates barrier options, where the pay-off not only depends on th
 We currently use a down-and-out kind of call option, although we are adding more options to run soon.
 We have set the rebate price as 0, but we are also working on adding the option to allow a different rebate price.
 
+## Presentation
+[Link](https://docs.google.com/presentation/d/1jKo4DxYR8iUAGKAsCCW4L0UDvdvlTYFz5IpUdjG1vR8/edit#slide=id.g2628c323073_0_54)
+
+
 ## Methodology
 
 ### Architecture of the system we run this on:
