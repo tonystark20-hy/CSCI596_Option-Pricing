@@ -16,6 +16,7 @@ using namespace std;
 
 int nprocs;  /* Number of processes */
 int myid;    /* My rank */
+const size_t N_PATHS = 100000;
 
 // Calculate workload for each MPI process
 size_t paths_per_process = N_PATHS / nprocs;
@@ -27,7 +28,6 @@ int main(int argc,char *argv[])
     try
     {
         // declare variables and constants
-        const size_t N_PATHS = 100000;
         const size_t N_STEPS = 365;
         const size_t N_NORMALS = N_PATHS * N_STEPS;
         const float T = 1.0f;
@@ -80,7 +80,7 @@ int main(int argc,char *argv[])
             local_sum += s[i];
         }
         // temp_sum /= N_PATHS;
-        
+
         MPI_Reduce(&local_sum, &total_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
         if (myid == 0)
         {
@@ -127,7 +127,7 @@ int main(int argc,char *argv[])
         cout << "Annual drift: " << mu << "%\n";
         cout << "Volatility: " << sigma << "%\n";
         cout << "****************** PRICE ******************\n";
-        cout << "Option Price (GPU): " << temp_sum << "\n";
+        cout << "Option Price (GPU): " << total_sum << "\n";
         cout << "Option Price (CPU): " << sum << "\n";
         cout << "******************* TIME *****************\n";
         cout << "GPU Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
