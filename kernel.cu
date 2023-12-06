@@ -12,7 +12,9 @@ __global__ void mc_kernel(
     float dt,
     float * d_normals,
     unsigned N_STEPS,
-    unsigned N_PATHS)
+    unsigned N_PATHS,
+    unsigned NUM_THREAD,
+    unsigned NUM_BLOCK,)
     {
         const unsigned tid = threadIdx.x;
         const unsigned bid = blockIdx.x;
