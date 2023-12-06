@@ -1,5 +1,3 @@
-// commit test
-
 #include <stdio.h>
 #include <vector>
 #include <time.h>
@@ -10,26 +8,23 @@
 #include "kernel.h"
 #include "dev_array.h"
 #include <curand.h>
-#include "mpi.h"
-
+#include <omp.h>
 using namespace std;
 
-int nprocs;  /* Number of processes */
-int myid;    /* My rank */
-const size_t N_PATHS = 100000;
+#define NUM_DEVICE 2    // # of GPU devices = # of OpenMP threads
+#define NUM_BLOCK   13  // Number of thread blocks
+#define NUM_THREAD 192  // Number of threads per block
 
-// Calculate workload for each MPI process
-size_t paths_per_process = N_PATHS / nprocs;
-size_t start_idx = myid * paths_per_process;
-size_t end_idx = start_idx + paths_per_process;
-
-int main(int argc,char *argv[])
+int main()
 {
     try
     {
         // declare variables and constants
+        const size_t N_PATHS = 100000;
         const size_t N_STEPS = 365;
         const size_t N_NORMALS = N_PATHS * N_STEPS;
+        int N_THREADS;
+        cudaGetDeviceCount(&N_THREADS);
         const float T = 1.0f;
         const float K = 100.0f;
         const float B = 95.0f;
@@ -39,85 +34,67 @@ int main(int argc,char *argv[])
         const float r = 0.05f;
         float dt = float(T) / float(N_STEPS);
         float sqrdt = sqrt(dt);
+        int thread_count;
+        double sum;
+        cout<<"Total number of CPUs: "<<omp_get_num_procs()<<"\n";
+        cout<<"max threads available: "<<omp_get_max_threads()<<" "<<N_THREADS<<"\n";
 
-        MPI_Init(&argc,&argv);
-        MPI_Comm_rank(MPI_COMM_WORLD, &myid);
-        MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
-
-        // generate arrays
-        vector<float> s(N_PATHS);
-        dev_array<float> d_s(N_PATHS);
-        dev_array<float> d_normals(N_NORMALS);
-
-        // generate random numbers
-        curandGenerator_t curandGenerator;
-        curandCreateGenerator(&curandGenerator, CURAND_RNG_PSEUDO_MTGP32);
-        curandSetPseudoRandomGeneratorSeed(curandGenerator, 0);
-        curandGenerateNormal(curandGenerator, d_normals.getData(), N_NORMALS, 0.0f, sqrdt);
         double t2 = double(clock()) / CLOCKS_PER_SEC;
 
-        // call the kernel
-        mc_dao_call(d_s.getData(), T, K, B, S0, sigma, mu, r, dt, d_normals.getData(), N_STEPS, N_PATHS);
-        cudaDeviceSynchronize();
+        int myid,nproc,nbin,tid;
+        double step;
+        nbin = N_NORMALS/(nproc*NUM_DEVICE); // # of bins per OpenMP thread
+        step = 1.0/(double)(nbin*nproc*NUM_DEVICE);
 
-        // copy results from device to host
-        d_s.get(&s[0], N_PATHS);
+        MPI_Init(&argc,&argv);
+        MPI_Comm_rank(MPI_COMM_WORLD,&myid);  // My MPI rank
+        MPI_Comm_size(MPI_COMM_WORLD,&nproc);  // Number of MPI processes
 
-        if (myid == nprocs - 1) {
-            end_idx = N_PATHS;
-        }
-
-        // compute the payoff average
-        // double temp_sum = 0.0;
-
-        // MPI variables for local sum and final sum
-        double local_sum = 0.0;
-        double total_sum = 0.0;
-
-        // for (size_t i = 0; i < N_PATHS; i++)
-        for (size_t i = start_idx; i < end_idx; i++)
+// generate arrays
+#pragma omp parallel reduction(+ : sum)
         {
-            local_sum += s[i];
-        }
-        // temp_sum /= N_PATHS;
-
-        MPI_Reduce(&local_sum, &total_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-        if (myid == 0)
-        {
-            total_sum /= N_PATHS;
-        }
-        double t4 = double(clock()) / CLOCKS_PER_SEC;
-
-        // init variables for CPU Monte Carlo
-        vector<float> normals(N_NORMALS);
-        d_normals.get(&normals[0], N_NORMALS);
-        double sum = 0.0;
-        float s_curr = 0.0;
-
-        // CPU Monte Carlo Simulation
-        for (size_t i = 0; i < N_PATHS; i++)
-        {
-            int n_idx = i * N_STEPS;
-
-            s_curr = S0;
-            int n = 0;
-
-            do
+#pragma omp single
             {
-                s_curr = s_curr + mu * s_curr * dt + sigma * s_curr * normals[n_idx];
-                n_idx++;
-                n++;
-            } while (n < N_STEPS && s_curr > B);
+                thread_count = omp_get_num_threads();
+            }
+            int thread_paths = N_PATHS/thread_count;
+            int thread_normals = N_NORMALS/thread_count;
+            int mpid = omp_get_thread_num();
+            offset = (NUM_DEVICE*myid+mpid)*step*nbin; // Quadrature-point offset   
+            cudaSetDevice(mpid%2);
+            // cudaSetDevice(omp_get_thread_num());
+            vector<float> s(thread_paths);
+            dev_array<float> d_s(thread_paths);
+            dev_array<float> d_normals(thread_normals);
 
-            double payoff = (s_curr > K ? s_curr - K : 0.0);
-            sum += exp(-r * T) * payoff;
+            curandGenerator_t curandGenerator;
+            curandCreateGenerator(&curandGenerator, CURAND_RNG_PSEUDO_MTGP32);
+            curandSetPseudoRandomGeneratorSeed(curandGenerator, 0);
+            curandGenerateNormal(curandGenerator, d_normals.getData(), thread_normals, 0.0f, sqrdt);
+
+            // call the kernel
+            mc_dao_call(d_s.getData(), T, K, B, S0, sigma, mu, r, dt, d_normals.getData(), N_STEPS, thread_paths, NUM_THREAD, NUM_BLOCK);
+            cudaDeviceSynchronize();
+
+            // copy results from device to host
+            d_s.get(&s[0], thread_paths);
+
+            // compute the payoff average
+            sum = 0.0;
+            for (size_t i = 0; i < thread_paths; i++)
+            {
+                sum += s[i];
+            }
+            sum /= thread_paths;
+            curandDestroyGenerator(curandGenerator);
         }
 
-        sum /= N_PATHS;
-
-        double t5 = double(clock()) / CLOCKS_PER_SEC;
+        sum /= thread_count;
+        double t4 = double(clock()) / CLOCKS_PER_SEC;
+        // init variables for CPU Monte Carlo
 
         cout << "****************** INFO ******************\n";
+        cout << "Number of Threads and devices: " << thread_count <<" "<< N_THREADS <<"\n";
         cout << "Number of Paths: " << N_PATHS << "\n";
         cout << "Underlying Initial Price: " << S0 << "\n";
         cout << "Strike: " << K << "\n";
@@ -127,15 +104,12 @@ int main(int argc,char *argv[])
         cout << "Annual drift: " << mu << "%\n";
         cout << "Volatility: " << sigma << "%\n";
         cout << "****************** PRICE ******************\n";
-        cout << "Option Price (GPU): " << total_sum << "\n";
-        cout << "Option Price (CPU): " << sum << "\n";
+        cout << "Option Price (MPI): " << sum << "\n";
         cout << "******************* TIME *****************\n";
-        cout << "GPU Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
-        cout << "CPU Monte Carlo Computation: " << (t5 - t4) * 1e3 << " ms\n";
+        cout << "MPI Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
         cout << "******************* END *****************\n";
 
         // destroy generator
-        curandDestroyGenerator(curandGenerator);
     }
     catch (exception &e)
     {
