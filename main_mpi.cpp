@@ -19,8 +19,8 @@ int myid;    /* My rank */
 const size_t N_PATHS = 100000;
 
 // Calculate workload for each MPI process
-size_t paths_per_process = N_PATHS / (nprocs+1);
-size_t start_idx = (myid+1) * paths_per_process;
+size_t paths_per_process = N_PATHS / (nprocs);
+size_t start_idx = myid * paths_per_process;
 size_t end_idx = start_idx + paths_per_process;
 
 int main(int argc,char *argv[])
