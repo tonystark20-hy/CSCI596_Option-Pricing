@@ -46,11 +46,9 @@ __global__ void mc_kernel(
         float dt,
         float * d_normals,
         unsigned N_STEPS,
-        unsigned N_PATHS,
-        unsigned NUM_THREAD,
-        unsigned NUM_BLOCK) {
+        unsigned N_PATHS) {
             const unsigned BLOCK_SIZE = 1024;
             const unsigned GRID_SIZE = ceil(float(N_PATHS) / float(BLOCK_SIZE));
             mc_kernel<<<GRID_SIZE, BLOCK_SIZE>>>(
-            d_s, T, K, B, S0, sigma, mu, r, dt, d_normals, N_STEPS, N_PATHS, NUM_THREAD, NUM_BLOCK);
+            d_s, T, K, B, S0, sigma, mu, r, dt, d_normals, N_STEPS, N_PATHS);
         }
