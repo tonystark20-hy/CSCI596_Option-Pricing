@@ -3,7 +3,7 @@ main: main.o kernel.o
 main_omp: main_omp.o kernel.o
 	nvcc -Xcompiler -fopenmp main_omp.o kernel.o -o main_omp -L${OPENMPI_ROOT}/lib -lmpi -lgomp -lcurand
 main_mpi: main_mpi.o kernel.o
-	nvcc -Xcompiler -fopenmp main_mpi.o kernel.o -o main_mpi -L${OPENMPI_ROOT}/lib -lmpi -lgomp -lcurand
+	nvcc -Xcompiler -fopenmp main_mpi.o kernel.o -o main_mpi -L${OPENMPI_ROOT}/lib -lmpi -lmpi_cxx -lpthread -lgomp -lcurand
 main.o: main.cpp
 	nvcc -c main.o main.cpp
 main_omp.o: main_omp.cpp

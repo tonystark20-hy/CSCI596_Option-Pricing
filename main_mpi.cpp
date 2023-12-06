@@ -1,4 +1,5 @@
 // commit test
+#include "mpi.h"
 
 #include <stdio.h>
 #include <vector>
@@ -10,7 +11,6 @@
 #include "kernel.h"
 #include "dev_array.h"
 #include <curand.h>
-#include "mpi.h"
 
 using namespace std;
 
