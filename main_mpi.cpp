@@ -18,13 +18,6 @@ int nprocs;  /* Number of processes */
 int myid;    /* My rank */
 const size_t N_PATHS = 100000;
 
-// Calculate workload for each MPI process
-// size_t paths_per_process = N_PATHS / nprocs;
-
-size_t paths_per_process = N_PATHS / (nprocs+1);
-size_t start_idx = myid * paths_per_process;
-size_t end_idx = start_idx + paths_per_process;
-
 int main(int argc,char *argv[])
 {
     try
@@ -45,6 +38,12 @@ int main(int argc,char *argv[])
         MPI_Init(&argc,&argv);
         MPI_Comm_rank(MPI_COMM_WORLD, &myid);
         MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+
+        // Calculate workload for each MPI process
+        // size_t paths_per_process = N_PATHS / nprocs;
+        size_t paths_per_process = N_PATHS / nprocs;
+        size_t start_idx = myid * paths_per_process;
+        size_t end_idx = start_idx + paths_per_process;
 
         // generate arrays
         vector<float> s(N_PATHS);
