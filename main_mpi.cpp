@@ -20,6 +20,7 @@ const size_t N_PATHS = 100000;
 
 // Calculate workload for each MPI process
 // size_t paths_per_process = N_PATHS / nprocs;
+
 size_t paths_per_process = N_PATHS / (nprocs+1);
 size_t start_idx = myid * paths_per_process;
 size_t end_idx = start_idx + paths_per_process;
@@ -128,7 +129,7 @@ int main(int argc,char *argv[])
             cout << "Annual drift: " << mu << "%\n";
             cout << "Volatility: " << sigma << "%\n";
             cout << "****************** PRICE ******************\n";
-            cout << "Option Price (GPU+MPI): " << total_sum << "\n";
+            cout << "Option Price (GPU+MPI): " << total_sum/nprocs << "\n";
             cout << "Option Price (CPU): " << sum << "\n";
             cout << "******************* TIME *****************\n";
             cout << "GPU Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
