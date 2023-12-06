@@ -20,7 +20,7 @@ const size_t N_PATHS = 100000;
 
 // Calculate workload for each MPI process
 size_t paths_per_process = N_PATHS / (nprocs+1);
-size_t start_idx = myid * paths_per_process;
+size_t start_idx = (myid+1) * paths_per_process;
 size_t end_idx = start_idx + paths_per_process;
 
 int main(int argc,char *argv[])
@@ -84,58 +84,59 @@ int main(int argc,char *argv[])
         MPI_Reduce(&local_sum, &total_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
         if (myid == 0)
         {
-            total_sum /= N_PATHS;
-        }
-        double t4 = double(clock()) / CLOCKS_PER_SEC;
+            total_sum /= (N_PATHS);
+        
+            double t4 = double(clock()) / CLOCKS_PER_SEC;
 
-        // init variables for CPU Monte Carlo
-        vector<float> normals(N_NORMALS);
-        d_normals.get(&normals[0], N_NORMALS);
-        double sum = 0.0;
-        float s_curr = 0.0;
+            // init variables for CPU Monte Carlo
+            vector<float> normals(N_NORMALS);
+            d_normals.get(&normals[0], N_NORMALS);
+            double sum = 0.0;
+            float s_curr = 0.0;
 
-        // CPU Monte Carlo Simulation
-        for (size_t i = 0; i < N_PATHS; i++)
-        {
-            int n_idx = i * N_STEPS;
-
-            s_curr = S0;
-            int n = 0;
-
-            do
+            // CPU Monte Carlo Simulation
+            for (size_t i = 0; i < N_PATHS; i++)
             {
-                s_curr = s_curr + mu * s_curr * dt + sigma * s_curr * normals[n_idx];
-                n_idx++;
-                n++;
-            } while (n < N_STEPS && s_curr > B);
+                int n_idx = i * N_STEPS;
 
-            double payoff = (s_curr > K ? s_curr - K : 0.0);
-            sum += exp(-r * T) * payoff;
+                s_curr = S0;
+                int n = 0;
+
+                do
+                {
+                    s_curr = s_curr + mu * s_curr * dt + sigma * s_curr * normals[n_idx];
+                    n_idx++;
+                    n++;
+                } while (n < N_STEPS && s_curr > B);
+
+                double payoff = (s_curr > K ? s_curr - K : 0.0);
+                sum += exp(-r * T) * payoff;
+            }
+
+            sum /= N_PATHS;
+
+            double t5 = double(clock()) / CLOCKS_PER_SEC;
+
+            cout << "****************** INFO ******************\n";
+            cout << "Number of Paths: " << N_PATHS << "\n";
+            cout << "Underlying Initial Price: " << S0 << "\n";
+            cout << "Strike: " << K << "\n";
+            cout << "Barrier: " << B << "\n";
+            cout << "Time to Maturity: " << T << " years\n";
+            cout << "Risk-free Interest Rate: " << r << "%\n";
+            cout << "Annual drift: " << mu << "%\n";
+            cout << "Volatility: " << sigma << "%\n";
+            cout << "****************** PRICE ******************\n";
+            cout << "Option Price (GPU+MPI): " << total_sum << "\n";
+            cout << "Option Price (CPU): " << sum << "\n";
+            cout << "******************* TIME *****************\n";
+            cout << "GPU Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
+            cout << "CPU Monte Carlo Computation: " << (t5 - t4) * 1e3 << " ms\n";
+            cout << "******************* END *****************\n";
+
+            // destroy generator
+            curandDestroyGenerator(curandGenerator);
         }
-
-        sum /= N_PATHS;
-
-        double t5 = double(clock()) / CLOCKS_PER_SEC;
-
-        cout << "****************** INFO ******************\n";
-        cout << "Number of Paths: " << N_PATHS << "\n";
-        cout << "Underlying Initial Price: " << S0 << "\n";
-        cout << "Strike: " << K << "\n";
-        cout << "Barrier: " << B << "\n";
-        cout << "Time to Maturity: " << T << " years\n";
-        cout << "Risk-free Interest Rate: " << r << "%\n";
-        cout << "Annual drift: " << mu << "%\n";
-        cout << "Volatility: " << sigma << "%\n";
-        cout << "****************** PRICE ******************\n";
-        cout << "Option Price (GPU): " << total_sum << "\n";
-        cout << "Option Price (CPU): " << sum << "\n";
-        cout << "******************* TIME *****************\n";
-        cout << "GPU Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
-        cout << "CPU Monte Carlo Computation: " << (t5 - t4) * 1e3 << " ms\n";
-        cout << "******************* END *****************\n";
-
-        // destroy generator
-        curandDestroyGenerator(curandGenerator);
     }
     catch (exception &e)
     {
