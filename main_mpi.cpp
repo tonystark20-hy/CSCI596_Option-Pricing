@@ -14,8 +14,6 @@
 
 using namespace std;
 
-int nprocs;  /* Number of processes */
-int myid;    /* My rank */
 const size_t N_PATHS = 100000;
 
 int main(int argc,char *argv[])
@@ -34,6 +32,9 @@ int main(int argc,char *argv[])
         const float r = 0.05f;
         float dt = float(T) / float(N_STEPS);
         float sqrdt = sqrt(dt);
+
+        int nprocs;  /* Number of processes */
+        int myid;    /* My rank */
 
         MPI_Init(&argc,&argv);
         MPI_Comm_rank(MPI_COMM_WORLD, &myid);
