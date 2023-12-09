@@ -52,7 +52,7 @@ int main()
 
             curandGenerator_t curandGenerator;
             curandCreateGenerator(&curandGenerator, CURAND_RNG_PSEUDO_MTGP32);
-            curandSetPseudoRandomGeneratorSeed(curandGenerator, 0);
+            curandSetPseudoRandomGeneratorSeed(curandGenerator, omp_get_thread_num());
             curandGenerateNormal(curandGenerator, d_normals.getData(), thread_normals, 0.0f, sqrdt);
 
             // call the kernel
