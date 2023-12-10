@@ -69,6 +69,7 @@ int main()
                 sum += s[i];
             }
             sum /= thread_paths;
+            cout<<"thread "<<omp_get_thread_num()<<" option price: "<<sum<<endl;
             curandDestroyGenerator(curandGenerator);
         }
 

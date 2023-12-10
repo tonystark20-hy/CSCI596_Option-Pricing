@@ -11,6 +11,7 @@
 #include "kernel.h"
 #include "dev_array.h"
 #include <curand.h>
+#include <omp.h>
 
 using namespace std;
 
@@ -48,7 +49,7 @@ int main(int argc,char *argv[])
         {
             t2 = double(clock()) / CLOCKS_PER_SEC;
         }
-        
+
 #pragma omp parallel reduction(+ : local_sum)
         {
 #pragma omp single
@@ -82,6 +83,7 @@ int main(int argc,char *argv[])
             }
             local_sum /= thread_paths;
             curandDestroyGenerator(curandGenerator);
+            cout<<"proc "<<proc_id<<" thread "<<omp_get_thread_num()<<" option price: "<<local_sum<<endl;
         }
 
         local_sum /= thread_count;
@@ -98,6 +100,8 @@ int main(int argc,char *argv[])
             
 
             cout << "****************** INFO ******************\n";
+            cout << "Number of Processes: " << nprocs << "\n";
+            cout << "Number of Threads: " << thread_count << "\n";
             cout << "Number of Paths: " << N_PATHS << "\n";
             cout << "Underlying Initial Price: " << S0 << "\n";
             cout << "Strike: " << K << "\n";
@@ -113,9 +117,8 @@ int main(int argc,char *argv[])
             cout << "Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
             cout << "******************* END *****************\n";
 
-            // destroy generator
-            curandDestroyGenerator(curandGenerator);
         }
+        MPI_Finalize();
     }
     catch (exception &e)
     {

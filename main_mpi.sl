@@ -7,4 +7,4 @@
 #SBATCH --output=main_mpi.out
 #SBATCH --account=anakano_429
 
-mpirun -n 2 ./main_mpi
+mpirun -bind-to none -n 2 ./main_mpi
