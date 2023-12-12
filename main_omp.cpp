@@ -88,7 +88,7 @@ int main()
         cout << "Annual drift: " << mu << "%\n";
         cout << "Volatility: " << sigma << "%\n";
         cout << "****************** PRICE ******************\n";
-        cout << "Option Price (MPI): " << sum << "\n";
+        cout << "Option Price (GPU+OMP): " << sum << "\n";
         cout << "******************* TIME *****************\n";
         cout << "MPI Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
         cout << "******************* END *****************\n";
