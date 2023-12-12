@@ -12,6 +12,7 @@
 #include "dev_array.h"
 #include <curand.h>
 #include <omp.h>
+#include <string.h>
 
 using namespace std;
 
@@ -22,24 +23,67 @@ int main(int argc,char *argv[])
     try
     {
         // declare variables and constants
-        const size_t N_STEPS = 365;
-        const size_t N_NORMALS = N_PATHS * N_STEPS;
-        const float T = 1.0f;
-        const float K = 100.0f;
-        const float B = 95.0f;
-        const float S0 = 100.0f;
-        const float sigma = 0.2f;
-        const float mu = 0.1f;
-        const float r = 0.05f;
+        void (*mc_call)(float *, float, float, float, float, float, float, float, float, float *, unsigned int, unsigned int);
+        mc_call = mc_daip_call;
+        size_t N_STEPS = 365;
+        size_t N_NORMALS = N_PATHS * N_STEPS;
+        float T = 1.0f;
+        float K = 100.0f;
+        float B = 95.0f;
+        float S0 = 100.0f;
+        float sigma = 0.2f;
+        float mu = 0.1f;
+        float r = 0.05f;
         float dt = float(T) / float(N_STEPS);
         float sqrdt = sqrt(dt);
         double t2;
         int nprocs;  /* Number of processes */
         int proc_id;    /* My rank */
         int thread_count;
+        int device_count;
+        cudaGetDeviceCount(&device_count);
         MPI_Init(&argc,&argv);
         MPI_Comm_rank(MPI_COMM_WORLD, &proc_id);
         MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+
+        const std::vector<char *> args(argv + 1, argv + argc);
+        for (auto it = args.begin(), end = args.end(); it != end; ++it)
+        {
+            if (strcmp("daoc", *it) == 0)
+            {
+                mc_call = mc_daoc_call;
+                mu = 0.1f;
+                B = 95.0f;
+            }
+            if (strcmp("uaop", *it) == 0)
+            {
+                mc_call = mc_uaop_call;
+                mu = -0.1f;
+                B = 105.0f;
+            }
+            if (strcmp("uaic", *it) == 0)
+            {   
+                mc_call = mc_uaic_call;
+                mu = 0.1f;
+                B = 105.0f;
+            }
+            if (strcmp("daip", *it) == 0)
+            {   
+                mc_call = mc_daip_call;
+                mu = -0.1f;
+                B = 95.0f;
+            }            
+            if (strcmp("-B", *it) == 0)
+                if (it + 1 != end)
+                    B = stof(*(it + 1));
+            if (strcmp("-K", *it) == 0)
+                if (it + 1 != end)
+                {
+
+                    K = stof(*(it + 1));
+                    S0 = K;
+                }
+        }
 
         // MPI variables for local sum and final sum
         double local_sum = 0.0;
@@ -69,7 +113,7 @@ int main(int argc,char *argv[])
             curandGenerateNormal(curandGenerator, d_normals.getData(), thread_normals, 0.0f, sqrdt);
 
             // call the kernel
-            mc_dao_call(d_s.getData(), T, K, B, S0, sigma, mu, r, dt, d_normals.getData(), N_STEPS, thread_paths);
+            mc_call(d_s.getData(), T, K, B, S0, sigma, mu, r, dt, d_normals.getData(), N_STEPS, thread_paths);
             cudaDeviceSynchronize();
 
             // copy results from device to host
@@ -102,6 +146,7 @@ int main(int argc,char *argv[])
             cout << "****************** INFO ******************\n";
             cout << "Number of Processes: " << nprocs << "\n";
             cout << "Number of Threads: " << thread_count << "\n";
+            cout << "Number of Devices: " << device_count << "\n";
             cout << "Number of Paths: " << N_PATHS << "\n";
             cout << "Underlying Initial Price: " << S0 << "\n";
             cout << "Strike: " << K << "\n";
