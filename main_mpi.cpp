@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
             cout << "Annual drift: " << mu << "%\n";
             cout << "Volatility: " << sigma << "%\n";
             cout << "****************** PRICE ******************\n";
-            cout << "Option Price (GPU+MPI): " << total_sum << "\n";
+            cout << "Option Price (GPU+OMP+MPI): " << total_sum << "\n";
             cout << "******************* TIME *****************\n";
             // cout << "GPU Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
             cout << "Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
