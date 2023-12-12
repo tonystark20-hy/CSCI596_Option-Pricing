@@ -20,9 +20,9 @@ int main(int argc, char **argv)
         // declare variables and constants
         void (*mc_call)(float *, float, float, float, float, float, float, float, float, float *, unsigned int, unsigned int);
         mc_call = mc_daip_call;
-        const size_t N_PATHS = 100000;
-        const size_t N_STEPS = 365;
-        const size_t N_NORMALS = N_PATHS * N_STEPS;
+        size_t N_PATHS = 100000;
+        size_t N_STEPS = 365;
+
         // if (argc > 1)
         int N_THREADS;
         cudaGetDeviceCount(&N_THREADS);
@@ -53,17 +53,17 @@ int main(int argc, char **argv)
                 B = 105.0f;
             }
             if (strcmp("uaic", *it) == 0)
-            {   
+            {
                 mc_call = mc_uaic_call;
                 mu = 0.1f;
                 B = 105.0f;
             }
             if (strcmp("daip", *it) == 0)
-            {   
+            {
                 mc_call = mc_daip_call;
                 mu = -0.1f;
                 B = 95.0f;
-            }            
+            }
             if (strcmp("-B", *it) == 0)
                 if (it + 1 != end)
                     B = stof(*(it + 1));
@@ -74,7 +74,13 @@ int main(int argc, char **argv)
                     K = stof(*(it + 1));
                     S0 = K;
                 }
+            if (strcmp("-N", *it) == 0)
+                if (it + 1 != end)
+                {
+                    N_PATHS = stof(*(it + 1));
+                }
         }
+        size_t N_NORMALS = N_PATHS * N_STEPS;
         cout << "Total number of CPUs: " << omp_get_num_procs() << "\n";
         cout << "max threads available: " << omp_get_max_threads() << " " << N_THREADS << "\n";
 

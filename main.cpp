@@ -14,7 +14,7 @@
 
 using namespace std;
 
-int main(int argc,char *argv[])
+int main(int argc, char *argv[])
 {
     try
     {
@@ -23,7 +23,7 @@ int main(int argc,char *argv[])
         mc_call = mc_daip_call;
         size_t N_PATHS = 100000;
         size_t N_STEPS = 365;
-        size_t N_NORMALS = N_PATHS * N_STEPS;
+
         float T = 1.0f;
         float K = 100.0f;
         float B = 95.0f;
@@ -49,17 +49,17 @@ int main(int argc,char *argv[])
                 B = 105.0f;
             }
             if (strcmp("uaic", *it) == 0)
-            {   
+            {
                 mc_call = mc_uaic_call;
                 mu = 0.1f;
                 B = 105.0f;
             }
             if (strcmp("daip", *it) == 0)
-            {   
+            {
                 mc_call = mc_daip_call;
                 mu = -0.1f;
                 B = 95.0f;
-            }            
+            }
             if (strcmp("-B", *it) == 0)
                 if (it + 1 != end)
                     B = stof(*(it + 1));
@@ -70,8 +70,14 @@ int main(int argc,char *argv[])
                     K = stof(*(it + 1));
                     S0 = K;
                 }
+            if (strcmp("-N", *it) == 0)
+                if (it + 1 != end)
+                {
+                    N_PATHS = stof(*(it + 1));
+                }
         }
         // generate arrays
+        size_t N_NORMALS = N_PATHS * N_STEPS;
         vector<float> s(N_PATHS);
         dev_array<float> d_s(N_PATHS);
         dev_array<float> d_normals(N_NORMALS);

@@ -16,17 +16,16 @@
 
 using namespace std;
 
-const size_t N_PATHS = 100000;
-
-int main(int argc,char *argv[])
+int main(int argc, char *argv[])
 {
     try
     {
         // declare variables and constants
         void (*mc_call)(float *, float, float, float, float, float, float, float, float, float *, unsigned int, unsigned int);
         mc_call = mc_daip_call;
+        size_t N_PATHS = 100000;
+
         size_t N_STEPS = 365;
-        size_t N_NORMALS = N_PATHS * N_STEPS;
         float T = 1.0f;
         float K = 100.0f;
         float B = 95.0f;
@@ -38,11 +37,11 @@ int main(int argc,char *argv[])
         float sqrdt = sqrt(dt);
         double t2;
         int nprocs;  /* Number of processes */
-        int proc_id;    /* My rank */
+        int proc_id; /* My rank */
         int thread_count;
         int device_count;
         cudaGetDeviceCount(&device_count);
-        MPI_Init(&argc,&argv);
+        MPI_Init(&argc, &argv);
         MPI_Comm_rank(MPI_COMM_WORLD, &proc_id);
         MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 
@@ -62,17 +61,17 @@ int main(int argc,char *argv[])
                 B = 105.0f;
             }
             if (strcmp("uaic", *it) == 0)
-            {   
+            {
                 mc_call = mc_uaic_call;
                 mu = 0.1f;
                 B = 105.0f;
             }
             if (strcmp("daip", *it) == 0)
-            {   
+            {
                 mc_call = mc_daip_call;
                 mu = -0.1f;
                 B = 95.0f;
-            }            
+            }
             if (strcmp("-B", *it) == 0)
                 if (it + 1 != end)
                     B = stof(*(it + 1));
@@ -83,9 +82,16 @@ int main(int argc,char *argv[])
                     K = stof(*(it + 1));
                     S0 = K;
                 }
+            if (strcmp("-N", *it) == 0)
+                if (it + 1 != end)
+                {
+                    N_PATHS = stof(*(it + 1));
+                }
         }
 
         // MPI variables for local sum and final sum
+        size_t N_NORMALS = N_PATHS * N_STEPS;
+
         double local_sum = 0.0;
         double total_sum = 0.0;
 
@@ -100,8 +106,8 @@ int main(int argc,char *argv[])
             {
                 thread_count = omp_get_num_threads();
             }
-            int thread_paths = N_PATHS/(thread_count * nprocs);
-            int thread_normals = N_NORMALS/(thread_count * nprocs);
+            int thread_paths = N_PATHS / (thread_count * nprocs);
+            int thread_normals = N_NORMALS / (thread_count * nprocs);
             cudaSetDevice(omp_get_thread_num());
             vector<float> s(thread_paths);
             dev_array<float> d_s(thread_paths);
@@ -127,21 +133,17 @@ int main(int argc,char *argv[])
             }
             local_sum /= thread_paths;
             curandDestroyGenerator(curandGenerator);
-            cout<<"proc "<<proc_id<<" thread "<<omp_get_thread_num()<<" option price: "<<local_sum<<endl;
+            cout << "proc " << proc_id << " thread " << omp_get_thread_num() << " option price: " << local_sum << endl;
         }
 
         local_sum /= thread_count;
-
-
-
 
         MPI_Reduce(&local_sum, &total_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
         if (proc_id == 0)
         {
             total_sum /= (nprocs);
-        
+
             double t4 = double(clock()) / CLOCKS_PER_SEC;
-            
 
             cout << "****************** INFO ******************\n";
             cout << "Number of Processes: " << nprocs << "\n";
@@ -161,7 +163,6 @@ int main(int argc,char *argv[])
             // cout << "GPU Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
             cout << "Monte Carlo Computation: " << (t4 - t2) * 1e3 << " ms\n";
             cout << "******************* END *****************\n";
-
         }
         MPI_Finalize();
     }
