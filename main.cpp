@@ -75,12 +75,6 @@ int main(int argc, char *argv[])
                 {
                     N_PATHS = stof(*(it + 1));
                 }
-            if (strcmp("-", *it) == 0)
-                if (it + 1 != end)
-                {
-                    N_PATHS = stof(*(it + 1));
-                }
-
         }
         // generate arrays
         size_t N_NORMALS = N_PATHS * N_STEPS;

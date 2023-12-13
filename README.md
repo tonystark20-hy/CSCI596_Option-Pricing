@@ -66,6 +66,37 @@ We have four versions of the code:
 Each node runs a version of Multiple CPUs, Multiple GPUs running on multiple Cuda threads, and multiple CPU threads
 </ol>
 
+## Charts:
+
+### CUDA Scaling:
+Single CUDA thread scaling with different sizes of input
+
+![Alt text](<charts/Speed vs. Size (CUDA only).png>)
+
+### OMP + CUDA
+OMP threads + CUDA scaling; Note that the input size is scaled according to the number of threads, i.e. for 1 thread, input size = 100000 Paths, for 2, it is 200000 and for 4 it is 400000
+
+![Alt text](<charts/Speed_Threads (OMP + CUDA) .png>)
+
+### MPI + OMP + CUDA
+MPI + OMP + CUDA scaling; Input is scaled in the same way as in OMP + CUDA
+
+When run on a single node:
+
+![Alt text](<charts/Speed_Threads on Single Node (MPI + OMP +CUDA).png>)
+
+When run on 2 nodes:
+
+![Alt text](<charts/Speed_Threads on 2 Nodes (MPI + OMP + CUDA).png>)
+
+When run on 4 nodes:
+
+![Alt text](<charts/Speed_Threads for 4 Nodes (MPI + OMP + CUDA).png>)
+
+### On larger input sizes
+We then ran the same experiments on larger input. To not overload this README we just post the readings here:
+
+![Alt text](charts/table.png)
 
 ## References
 
