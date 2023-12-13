@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=2
 #SBATCH --gres=gpu:2
 #SBATCH --time=00:00:59
-#SBATCH --output=scale_mpi.out
+#SBATCH --output=scale_t4.out
 #SBATCH --account=anakano_429
 
 counter=1
