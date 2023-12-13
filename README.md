@@ -78,35 +78,25 @@ Each node runs a version of Multiple CPUs, Multiple GPUs running on multiple Cud
 
 ## Charts:
 We perform all the tests on Down-and-in-Put-Options but we have implemented other versions of options too
-### CUDA Scaling:
-Single CUDA thread scaling with different sizes of input
+### Weak Scaling :
+Weak scaling on the number of MPI nodes, if threads per node = 1
 
-![Alt text](<charts/Speed vs. Size (CUDA only).png>)
+![Alt text](<charts/Nodes vs Speed-up (1 thread_node) weak scaling.png>)
 
-### OMP + CUDA
-OMP threads + CUDA scaling; Note that the input size is scaled according to the number of threads, i.e. for 1 thread, input size = 100000 Paths, for 2, it is 200000 and for 4 it is 400000
+Weak scaling on the number of MPI nodes, if threads per node = 2
 
-![Alt text](<charts/Speed_Threads (OMP + CUDA) .png>)
+![Alt text](<charts/Nodes vs Speed-up (2 Threads_Node) weak_scaling.png>)
 
-### MPI + OMP + CUDA
-MPI + OMP + CUDA scaling; Input is scaled in the same way as in OMP + CUDA
+Weak scaling on the number of MPI nodes, if threads per node = 4
 
-When run on a single node:
+![Alt text](<charts/Nodes and Speed-up (4 threads_node) weak_scaling.png>)
 
-![Alt text](<charts/Speed_Threads on Single Node (MPI + OMP +CUDA).png>)
+Weak Scaling on the number of threads (Keeping nodes = 1)
 
-When run on 2 nodes:
+### Strong Scaling:
+Weak scaling on the number of MPI nodes, if threads per node = 1
 
-![Alt text](<charts/Speed_Threads on 2 Nodes (MPI + OMP + CUDA).png>)
 
-When run on 4 nodes:
-
-![Alt text](<charts/Speed_Threads for 4 Nodes (MPI + OMP + CUDA).png>)
-
-### On larger input sizes
-We then ran the same experiments on larger input. To not overload this README we just post the readings here:
-
-![Alt text](charts/table.png)
 
 ## References
 
