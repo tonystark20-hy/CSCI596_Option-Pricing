@@ -1,0 +1,66 @@
+==========================================
+SLURM_JOB_ID = 18137995
+SLURM_JOB_NODELIST = e16-01
+TMPDIR = /tmp/SLURM_18137995
+==========================================
+***** threads 1*****
+Total number of CPUs: 2
+max threads available: 1
+thread 0 option price: 12.8176
+****************** INFO ******************
+Number of Threads and devices: 1 2
+Number of Paths: 100000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP): 12.8176
+******************* TIME *****************
+MPI Monte Carlo Computation: 90 ms
+******************* END *****************
+***** threads 2*****
+Total number of CPUs: 2
+max threads available: 2
+thread 1 option price: 13.7056
+thread 0 option price: 12.8176
+****************** INFO ******************
+Number of Threads and devices: 2 2
+Number of Paths: 200000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP): 13.2616
+******************* TIME *****************
+MPI Monte Carlo Computation: 220 ms
+******************* END *****************
+***** threads 4*****
+Total number of CPUs: 2
+max threads available: 4
+thread 0 option price: 12.8176
+thread 2 option price: 12.8191
+thread 1 option price: 13.7056
+thread 3 option price: 13.5239
+****************** INFO ******************
+Number of Threads and devices: 4 2
+Number of Paths: 400000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP): 13.2165
+******************* TIME *****************
+MPI Monte Carlo Computation: 260 ms
+******************* END *****************

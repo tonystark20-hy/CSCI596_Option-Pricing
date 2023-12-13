@@ -87,6 +87,11 @@ int main(int argc, char *argv[])
                 {
                     N_PATHS = stof(*(it + 1));
                 }
+            if (strcmp("-threads", *it) == 0)
+                if (it + 1 != end)
+                {
+                    omp_set_num_threads(stoi(*(it + 1)));
+                }
         }
 
         // MPI variables for local sum and final sum
@@ -100,6 +105,7 @@ int main(int argc, char *argv[])
             t2 = double(clock()) / CLOCKS_PER_SEC;
         }
 
+
 #pragma omp parallel reduction(+ : local_sum)
         {
 #pragma omp single
@@ -108,7 +114,7 @@ int main(int argc, char *argv[])
             }
             int thread_paths = N_PATHS / (thread_count * nprocs);
             int thread_normals = N_NORMALS / (thread_count * nprocs);
-            cudaSetDevice(omp_get_thread_num());
+            cudaSetDevice(omp_get_thread_num()%device_count);
             vector<float> s(thread_paths);
             dev_array<float> d_s(thread_paths);
             dev_array<float> d_normals(thread_normals);

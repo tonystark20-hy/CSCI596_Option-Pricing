@@ -24,8 +24,7 @@ int main(int argc, char **argv)
         size_t N_STEPS = 365;
 
         // if (argc > 1)
-        int N_THREADS;
-        cudaGetDeviceCount(&N_THREADS);
+        
         float T = 1.0f;
         float K = 100.0f;
         float B = 95.0f;
@@ -67,10 +66,10 @@ int main(int argc, char **argv)
             if (strcmp("-B", *it) == 0)
                 if (it + 1 != end)
                     B = stof(*(it + 1));
+
             if (strcmp("-K", *it) == 0)
                 if (it + 1 != end)
                 {
-
                     K = stof(*(it + 1));
                     S0 = K;
                 }
@@ -79,10 +78,17 @@ int main(int argc, char **argv)
                 {
                     N_PATHS = stof(*(it + 1));
                 }
+            if (strcmp("-threads", *it) == 0)
+                if (it + 1 != end)
+                {
+                    omp_set_num_threads(stoi(*(it + 1)));
+                }
         }
+        int device_count;
+        cudaGetDeviceCount(&device_count);
         size_t N_NORMALS = N_PATHS * N_STEPS;
         cout << "Total number of CPUs: " << omp_get_num_procs() << "\n";
-        cout << "max threads available: " << omp_get_max_threads() << " " << N_THREADS << "\n";
+        cout << "max threads available: " << omp_get_max_threads() << "\n";
 
         double t2 = double(clock()) / CLOCKS_PER_SEC;
 // generate arrays
@@ -94,7 +100,7 @@ int main(int argc, char **argv)
             }
             int thread_paths = N_PATHS / thread_count;
             int thread_normals = N_NORMALS / thread_count;
-            cudaSetDevice(omp_get_thread_num());
+            cudaSetDevice(omp_get_thread_num()%device_count);
             vector<float> s(thread_paths);
             dev_array<float> d_s(thread_paths);
             dev_array<float> d_normals(thread_normals);
@@ -127,7 +133,7 @@ int main(int argc, char **argv)
         // init variables for CPU Monte Carlo
 
         cout << "****************** INFO ******************\n";
-        cout << "Number of Threads and devices: " << thread_count << " " << N_THREADS << "\n";
+        cout << "Number of Threads and devices: " << thread_count << " " << device_count << "\n";
         cout << "Number of Paths: " << N_PATHS << "\n";
         cout << "Underlying Initial Price: " << S0 << "\n";
         cout << "Strike: " << K << "\n";

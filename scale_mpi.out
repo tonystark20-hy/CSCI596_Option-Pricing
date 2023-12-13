@@ -1,0 +1,216 @@
+==========================================
+SLURM_JOB_ID = 18137958
+SLURM_JOB_NODELIST = e07-[01-04]
+TMPDIR = /tmp/SLURM_18137958
+==========================================
+***** counter 1, threads 1 *****
+proc 0 thread 0 option price: 12.8176
+****************** INFO ******************
+Number of Processes: 1
+Number of Threads: 1
+Number of Devices: 2
+Number of Paths: 100000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 12.8176
+******************* TIME *****************
+Monte Carlo Computation: 90 ms
+******************* END *****************
+***** counter 1, threads 2 *****
+proc 0 thread 1 option price: 14.3502
+proc 0 thread 0 option price: 12.2312
+****************** INFO ******************
+Number of Processes: 1
+Number of Threads: 2
+Number of Devices: 2
+Number of Paths: 100000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 13.2907
+******************* TIME *****************
+Monte Carlo Computation: 170 ms
+******************* END *****************
+***** counter 1, threads 4 *****
+proc 0 thread 2 option price: 12.597
+proc 0 thread 3 option price: 11.6619
+proc 0 thread 0 option price: 10.8296
+proc 0 thread 1 option price: 12.7736
+****************** INFO ******************
+Number of Processes: 1
+Number of Threads: 4
+Number of Devices: 2
+Number of Paths: 100000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 11.9655
+******************* TIME *****************
+Monte Carlo Computation: 170 ms
+******************* END *****************
+***** counter 2, threads 1 *****
+proc 0 thread 0 option price: 12.8176
+proc 1 thread 0 option price: 12.8191
+****************** INFO ******************
+Number of Processes: 2
+Number of Threads: 1
+Number of Devices: 2
+Number of Paths: 200000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 12.8183
+******************* TIME *****************
+Monte Carlo Computation: 170 ms
+******************* END *****************
+***** counter 2, threads 2 *****
+proc 1 thread 0 option price: 12.6187
+proc 0 thread 0 option price: 12.2312
+proc 1 thread 1 option price: 12.6895
+proc 0 thread 1 option price: 14.3502
+****************** INFO ******************
+Number of Processes: 2
+Number of Threads: 2
+Number of Devices: 2
+Number of Paths: 200000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 12.9724
+******************* TIME *****************
+Monte Carlo Computation: 250 ms
+******************* END *****************
+***** counter 2, threads 4 *****
+proc 0 thread 2 option price: 12.597
+proc 0 thread 0 option price: 10.8296
+proc 1 thread 0 option price: 12.597
+proc 0 thread 3 option price: 11.6619
+proc 1 thread 2 option price: 11.6191
+proc 0 thread 1 option price: 12.7736
+proc 1 thread 1 option price: 11.6619
+proc 1 thread 3 option price: 13.0038
+****************** INFO ******************
+Number of Processes: 2
+Number of Threads: 4
+Number of Devices: 2
+Number of Paths: 200000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 12.093
+******************* TIME *****************
+Monte Carlo Computation: 270 ms
+******************* END *****************
+***** counter 4, threads 1 *****
+proc 0 thread 0 option price: 12.8176
+proc 3 thread 0 option price: 12.0297
+proc 2 thread 0 option price: 13.9213
+proc 1 thread 0 option price: 11.7146
+****************** INFO ******************
+Number of Processes: 4
+Number of Threads: 1
+Number of Devices: 2
+Number of Paths: 400000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 12.6208
+******************* TIME *****************
+Monte Carlo Computation: 150 ms
+******************* END *****************
+***** counter 4, threads 2 *****
+proc 0 thread 0 option price: 12.2312
+proc 3 thread 0 option price: 11.4584
+proc 2 thread 0 option price: 14.2593
+proc 1 thread 0 option price: 11.5362
+proc 0 thread 1 option price: 14.3502
+proc 3 thread 1 option price: 12.912
+proc 2 thread 1 option price: 14.0501
+proc 1 thread 1 option price: 13.424
+****************** INFO ******************
+Number of Processes: 4
+Number of Threads: 2
+Number of Devices: 2
+Number of Paths: 400000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 13.0277
+******************* TIME *****************
+Monte Carlo Computation: 260 ms
+******************* END *****************
+***** counter 4, threads 4 *****
+proc 1 thread 0 option price: 11.6191
+proc 0 thread 0 option price: 10.8296
+proc 1 thread 2 option price: 12.8826
+proc 0 thread 2 option price: 12.597
+proc 2 thread 0 option price: 13.7002
+proc 2 thread 2 option price: 11.9028
+proc 3 thread 3 option price: 14.8542
+proc 0 thread 1 option price: 12.7736
+proc 1 thread 3 option price: 11.7911
+proc 1 thread 1 option price: 13.0038
+proc 0 thread 3 option price: 11.6619
+proc 3 thread 1 option price: 13.9857
+proc 3 thread 2 option price: 12.5187
+proc 2 thread 3 option price: 10.6689
+proc 3 thread 0 option price: 11.5451
+proc 2 thread 1 option price: 14.6533
+****************** INFO ******************
+Number of Processes: 4
+Number of Threads: 4
+Number of Devices: 2
+Number of Paths: 400000
+Underlying Initial Price: 100
+Strike: 100
+Barrier: 95
+Time to Maturity: 1 years
+Risk-free Interest Rate: 0.05%
+Annual drift: -0.1%
+Volatility: 0.2%
+****************** PRICE ******************
+Option Price (GPU+OMP+MPI): 12.5617
+******************* TIME *****************
+Monte Carlo Computation: 250 ms
+******************* END *****************
