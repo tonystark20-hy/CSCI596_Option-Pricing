@@ -13,3 +13,17 @@ while [ $counter -lt 5 ]; do
   mpirun -bind-to none -n $counter ./main_mpi daip -N 100000 -threads 1
   let counter*=2
 done
+
+counter=1
+while [ $counter -lt 5 ]; do
+  echo "***** counter $counter *****"
+  mpirun -bind-to none -n $counter ./main_mpi daip -N 100000 -threads 2
+  let counter*=2
+done
+
+counter=1
+while [ $counter -lt 5 ]; do
+  echo "***** counter $counter *****"
+  mpirun -bind-to none -n $counter ./main_mpi daip -N 100000 -threads 4
+  let counter*=2
+done
