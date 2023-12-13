@@ -33,25 +33,21 @@ int main(int argc, char *argv[])
         {
             if (strcmp("daoc", *it) == 0)
             {
-                mc_call = mc_daoc_call;
                 mu = 0.1f;
                 B = 95.0f;
             }
             if (strcmp("uaop", *it) == 0)
             {
-                mc_call = mc_uaop_call;
                 mu = -0.1f;
                 B = 105.0f;
             }
             if (strcmp("uaic", *it) == 0)
             {
-                mc_call = mc_uaic_call;
                 mu = 0.1f;
                 B = 105.0f;
             }
             if (strcmp("daip", *it) == 0)
             {
-                mc_call = mc_daip_call;
                 mu = -0.1f;
                 B = 95.0f;
             }
@@ -76,13 +72,13 @@ int main(int argc, char *argv[])
 
         double t4 = double(clock()) / CLOCKS_PER_SEC;
 
-        init variables for CPU Monte Carlo
+        // init variables for CPU Monte Carlo
         vector<float> normals(N_NORMALS);
-        d_normals.get(&normals[0], N_NORMALS);
+        
         double sum = 0.0;
         float s_curr = 0.0;
 
-        CPU Monte Carlo Simulation
+        // CPU Monte Carlo Simulation
         for (size_t i = 0; i < N_PATHS; i++)
         {
             int n_idx = i * N_STEPS;
