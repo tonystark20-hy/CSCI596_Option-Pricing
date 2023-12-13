@@ -5,22 +5,32 @@
 #### Single CPU, Single GPU running on multiple Cuda threads and a single CPU thread:
 ```console
 foo@bar:~$ make main
-foo@bar:~$ sbatch main.sl
+foo@bar:~$ ./main option_type -B barrier_price -K strike_price -N number_of_paths
 ```
 
 #### Multiple CPU, Multiple GPU running on multiple Cuda threads and multiple CPU threads:
 ```console
 foo@bar:~$ make main_omp
-foo@bar:~$ sbatch main_omp.sl
+foo@bar:~$ ./main_omp option_type -B barrier_price -K strike_price -N number_of_paths -threads thread_count
 ```
 #### Multiple Node, Multiple CPUs, Multiple GPUs running on multiple Cuda threads and multiple CPU threads
-(Not finished yet)
+```console
+foo@bar:~$ make main_mpi
+foo@bar:~$ mpirun -bind-to none -n number_nodes ./main_mpi option_type -B barrier_price -K strike_price -N number_of_paths -threads thread_count
+```
 ## Brief background
 
 This project simulates barrier options, where the pay-off not only depends on the underlying asset's price at maturity but also on whether the underlying hits a price known as the barrier.
 
-We currently use a down-and-out kind of call option, although we are adding more options to run soon.
-We have set the rebate price as 0, but we are also working on adding the option to allow a different rebate price.
+We have implemented the following types of barrier options which can be passed as a command line option:
+<ul>
+<li>"daoc" - Down and Out Call Options</li>
+<li>"uaop" - Up and Out Put Options</li>
+<li>"uaic" - Up and In Call Options</li>
+<li>"daip" - Down and In Put Options</li>
+</ul>
+
+We have set the rebate price as 0, but an option to allow a different rebate price can be added in the fututre.
 
 ## Presentation
 [Link](https://docs.google.com/presentation/d/1jKo4DxYR8iUAGKAsCCW4L0UDvdvlTYFz5IpUdjG1vR8/edit#slide=id.g2628c323073_0_54)
@@ -67,7 +77,7 @@ Each node runs a version of Multiple CPUs, Multiple GPUs running on multiple Cud
 </ol>
 
 ## Charts:
-
+We perform all the tests on Down-and-in-Put-Options but we have implemented other versions of options too
 ### CUDA Scaling:
 Single CUDA thread scaling with different sizes of input
 
