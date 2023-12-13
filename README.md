@@ -78,8 +78,25 @@ Each node runs a version of Multiple CPUs, Multiple GPUs running on multiple Cud
 
 ## Charts:
 We perform all the tests on Down-and-in-Put-Options but we have implemented other versions of options too
-### Weak Scaling:
- 
+### Weak Scaling :
+Weak scaling on the number of MPI nodes, if threads per node = 1
+
+![Alt text](<charts/Nodes vs Speed-up (1 thread_node) weak scaling.png>)
+
+Weak scaling on the number of MPI nodes, if threads per node = 2
+
+![Alt text](<charts/Nodes vs Speed-up (2 Threads_Node) weak_scaling.png>)
+
+Weak scaling on the number of MPI nodes, if threads per node = 4
+
+![Alt text](<charts/Nodes and Speed-up (4 threads_node) weak_scaling.png>)
+
+Weak Scaling on the number of threads (Keeping nodes = 1)
+
+### Strong Scaling:
+Weak scaling on the number of MPI nodes, if threads per node = 1
+
+
 
 ## References
 
