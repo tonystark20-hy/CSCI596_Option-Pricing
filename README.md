@@ -93,10 +93,33 @@ Weak scaling on the number of MPI nodes, if threads per node = 4
 
 Weak Scaling on the number of threads (Keeping nodes = 1)
 
+![Alt text](<charts/Speed-up vs Threads (Number of nodes = 1) Weak Scaling.png>)
+
 ### Strong Scaling:
-Weak scaling on the number of MPI nodes, if threads per node = 1
 
+Strong scaling on the number of MPI nodes, if threads per node = 1
 
+![Alt text](<charts/Strong_Speedup_Nodes for 1 Thread.png>)
+
+Strong scaling on the number of MPI nodes, if threads per node = 2
+
+![Alt text](<charts/Strong_Speedup_Nodes for 2 Threads.png>)
+
+Strong scaling on the number of MPI nodes, if threads per node = 4
+
+![Alt text](<charts/Strong_Speedup_Nodes for 4 Threads.png>)
+
+Strong scaling on the number of threads, if node = 1
+
+![Alt text](<charts/Strong_Speedup_Threads for 1 Node.png>)
+
+Strong scaling on the number of threads, if node = 2
+
+![Alt text](<charts/Strong_Speedup_Threads for 2 Nodes.png>)
+
+Strong scaling on the number of threads, if node = 4
+
+![Alt text](<charts/Strong_Speedup_Threads for 4 Nodes.png>)
 
 ## References
 
