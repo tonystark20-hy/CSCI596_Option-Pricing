@@ -121,6 +121,22 @@ Strong scaling on the number of threads, if node = 4
 
 ![Alt text](<charts/Strong_Speedup_Threads for 4 Nodes.png>)
 
+### Speed of Single Threaded, Single Node on CUDA:
+
+Scaling of Cuda speed with respect to size of the input
+
+![Alt text](<charts/CUDA_ Speed vs. Paths.png>)
+
+### For Larger Inputs
+
+We also tested the program on larger inputs. For inputs larger than these we were running into memory constraints. Although we have an idea about how to get around them, it wasn't possible to do it before the submission deadline, as we would have to perform tests on those versions as well. Below are some runtimes on larger inputs that we didn't plot, just to keep the size of this Readme brief.
+
+![Alt text](charts/table.png)
+
+## Conclusion
+
+As we can see from the above charts, the scaling depends on the configuration. We believe that if we get around the memory constraints for larger input sizes, we would see much better scaling in larger sizes of inputs. Right now, it is faster to run if the input size fits exactly the GPU memory. Adding nodes and threads adds communcation overhead. But once the input size is much larger than CUDA's memory capacity, Parallel Nodes and threads improve the scaling of the program. 
+
 ## References
 
 1. "Monte Carlo Simulations In CUDA - Barrier Option Pricing",  QuantStart, [Link](https://www.quantstart.com/articles/Monte-Carlo-Simulations-In-CUDA-Barrier-Option-Pricing/) <br>
